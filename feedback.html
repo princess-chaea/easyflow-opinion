@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyFlow - 연구팀 의견 수합 및 자료실</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .category-card {
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .category-card.active {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+        }
+
+        .resource-btn {
+            transition: all 0.2s;
+        }
+
+        .resource-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center py-12 px-4">
+
+    <div class="max-w-2xl w-full space-y-6 animate-fade-in">
+        <!-- 상단 헤더 및 자료 링크 -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="bg-indigo-600 p-8 text-white">
+                <h1 class="text-2xl font-bold flex items-center gap-2">
+                    <i class="fas fa-comment-medical"></i> 이지플로우 연구팀 의견함
+                </h1>
+                <p class="text-indigo-100 mt-2 text-sm">
+                    아래 자료를 먼저 검토하신 후, 개선 아이디어를 남겨주세요.
+                </p>
+            </div>
+
+            <!-- 자료 다운로드/확인 섹션 -->
+            <div class="p-6 bg-slate-50 border-b border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- 프로토타입 링크 (로컬 배포 기준) -->
+                <a href="easyflow.html" target="_blank"
+                    class="resource-btn flex items-center justify-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-300 group">
+                    <div
+                        class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-tight">Prototype</p>
+                        <p class="text-sm font-bold text-slate-700">웹 프로토타입</p>
+                    </div>
+                </a>
+                <!-- 연구 계획서 링크 (구글 드라이브) -->
+                <a href="https://drive.google.com/file/d/18JmPfkzBv_Vs4szRTcfAGD90RxhrMrLY/view" target="_blank"
+                    class="resource-btn flex items-center justify-center gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-red-300 group">
+                    <div
+                        class="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-tight">Drive Link</p>
+                        <p class="text-sm font-bold text-slate-700">연구 운영 계획서</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 피드백 폼 -->
+            <form id="feedbackForm" class="p-8 space-y-6">
+                <!-- 작성자 -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">작성자 / 소속</label>
+                    <input type="text" name="author" id="author" required placeholder="예: 김교사 (하주초)"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all bg-slate-50/50">
+                </div>
+
+                <!-- 카테고리 선택 -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-3">의견 구분</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div onclick="selectCategory('UI/UX', this)"
+                            class="category-card p-4 rounded-2xl bg-slate-50 flex items-center gap-3 border border-slate-100">
+                            <i class="fas fa-paint-brush text-indigo-500"></i>
+                            <span class="text-sm font-bold text-slate-700">UI/UX 디자인</span>
+                        </div>
+                        <div onclick="selectCategory('개발', this)"
+                            class="category-card p-4 rounded-2xl bg-slate-50 flex items-center gap-3 border border-slate-100">
+                            <i class="fas fa-code text-indigo-500"></i>
+                            <span class="text-sm font-bold text-slate-700">개발/기술</span>
+                        </div>
+                        <div onclick="selectCategory('업무담당자', this)"
+                            class="category-card p-4 rounded-2xl bg-slate-50 flex items-center gap-3 border border-slate-100">
+                            <i class="fas fa-user-tie text-indigo-500"></i>
+                            <span class="text-sm font-bold text-slate-700">업무담당자</span>
+                        </div>
+                        <div onclick="selectCategory('사용자', this)"
+                            class="category-card p-4 rounded-2xl bg-slate-50 flex items-center gap-3 border border-slate-100">
+                            <i class="fas fa-users text-indigo-500"></i>
+                            <span class="text-sm font-bold text-slate-700">사용자 측면</span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="category" id="selectedCategory" required>
+                </div>
+
+                <!-- 내용 -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">상세 의견</label>
+                    <textarea name="content" id="content" required rows="5"
+                        placeholder="프로토타입을 사용해보시고 느낀 점이나 계획서의 보완 사항을 자유롭게 적어주세요."
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all bg-slate-50/50"></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
+                    <i class="fas fa-paper-plane"></i> 의견 기록하기 (시트 전송)
+                </button>
+            </form>
+
+            <!-- 완료 메시지 -->
+            <div id="successMsg" class="hidden p-12 text-center animate-fade-in">
+                <div
+                    class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">제출 완료!</h2>
+                <p class="text-slate-500 mb-8">연구팀의 소중한 의견이 스프레드시트에 기록되었습니다.</p>
+                <button onclick="location.reload()"
+                    class="bg-slate-100 px-6 py-2 rounded-xl text-slate-600 font-bold hover:bg-slate-200 transition-all">추가
+                    의견 작성</button>
+            </div>
+        </div>
+
+        <!-- 하단 정보 -->
+        <p class="text-center text-xs text-slate-400">
+            © 2026 이지플로우(EasyFlow) 연구팀 - AI 기반 학교행정 업무 경감 플랫폼
+        </p>
+    </div>
+
+    <script>
+        // GAS 웹앱 URL (배포 후 반드시 본인의 URL로 교체하세요)
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwupo-SmFhGwoPOwzo5RYisU1lA-BvrPMjKuyEtokJRALYPyZYL9WcGsGggwKSuWsP7/exec";
+
+        let currentCategory = "";
+
+        function selectCategory(cat, el) {
+            currentCategory = cat;
+            document.getElementById('selectedCategory').value = cat;
+            document.querySelectorAll('.category-card').forEach(card => card.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        document.getElementById('feedbackForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (!currentCategory) {
+                alert("의견 구분을 선택해주세요!");
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            const author = document.getElementById('author').value;
+            const content = document.getElementById('content').value;
+
+            const payload = {
+                author: author,
+                category: currentCategory,
+                content: content
+            };
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 시트에 전송 중...';
+
+            try {
+                // GAS POST 전송 (CORS 이슈로 인해 fetch 시 mode: 'no-cors' 사용 권장)
+                await fetch(GAS_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                // 전송 후 성공 화면 전환
+                document.getElementById('feedbackForm').classList.add('hidden');
+                document.getElementById('successMsg').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('전송 중 오류가 발생했습니다. GAS 설정이나 인터넷 연결을 확인해주세요.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> 다시 시도하기';
+            }
+        });
+    </script>
+</body>
+
+</html>

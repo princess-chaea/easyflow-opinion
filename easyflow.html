@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyFlow - AI 학교행정 컨시어지</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex overflow-hidden">
+
+    <!-- 사이드바 -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden lg:flex">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-indigo-600 flex items-center gap-2">
+                <i class="fas fa-wind"></i> EasyFlow
+            </h1>
+            <p class="text-[10px] text-slate-400 mt-1 font-semibold tracking-widest uppercase">Smart School Workflow</p>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-semibold">
+                <i class="fas fa-calendar-alt w-5"></i> 업무 다이어리
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+                <i class="fas fa-box-open w-5"></i> 업무배송 자료실
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+                <i class="fas fa-comments w-5"></i> 인생도서관 상담
+            </a>
+            <a href="#"
+                class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl transition-colors">
+                <i class="fas fa-chart-line w-5"></i> 업무 통계 및 성과
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-100">
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-2xl text-white shadow-lg">
+                <p class="text-xs font-bold mb-1 opacity-80">AI 지능형 비서</p>
+                <p class="text-sm leading-snug font-medium">교무부 부장님! <br>내일은 '정보공시' 마감일입니다. 확인하셨나요?</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 메인 영역 -->
+    <main class="flex-1 flex flex-col relative overflow-hidden">
+        <!-- 헤더 -->
+        <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0">
+            <div class="flex items-center gap-4">
+                <button class="lg:hidden text-slate-500 text-xl"><i class="fas fa-bars"></i></button>
+                <div class="flex items-center gap-3">
+                    <h2 class="text-lg font-bold text-slate-800">2026년 4월</h2>
+                    <div class="flex bg-slate-100 rounded-lg p-1">
+                        <button
+                            class="px-2 py-1 hover:bg-white hover:shadow-sm rounded-md transition-all text-slate-400 hover:text-slate-600"><i
+                                class="fas fa-chevron-left"></i></button>
+                        <button
+                            class="px-2 py-1 hover:bg-white hover:shadow-sm rounded-md transition-all text-slate-400 hover:text-slate-600"><i
+                                class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block">
+                    <input type="text" placeholder="업무, 서식, 멘토 검색..."
+                        class="bg-slate-100 border-none rounded-full py-2 pl-4 pr-10 text-sm w-72 focus:ring-2 focus:ring-indigo-500 transition-all">
+                    <i class="fas fa-search absolute right-4 top-2.5 text-slate-400"></i>
+                </div>
+                <div class="flex items-center gap-2 border-l pl-4 border-slate-200">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-700 leading-none">김교사</p>
+                        <p class="text-[10px] text-slate-400 mt-1">경산 하주초등학교</p>
+                    </div>
+                    <button
+                        class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden ring-1 ring-slate-200">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Teacher&backgroundColor=b6e3f4"
+                            alt="profile">
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 다이어리 그리드 영역 -->
+        <div class="flex-1 p-4 lg:p-6 overflow-y-auto">
+            <div class="max-w-7xl mx-auto h-full flex flex-col">
+                <!-- 요일 헤더 -->
+                <div class="calendar-grid mb-1">
+                    <div class="text-center py-2 text-[11px] font-bold text-red-500 uppercase tracking-tighter">SUN
+                    </div>
+                    <div class="text-center py-2 text-[11px] font-bold text-slate-400 uppercase tracking-tighter">MON
+                    </div>
+                    <div class="text-center py-2 text-[11px] font-bold text-slate-400 uppercase tracking-tighter">TUE
+                    </div>
+                    <div class="text-center py-2 text-[11px] font-bold text-slate-400 uppercase tracking-tighter">WED
+                    </div>
+                    <div class="text-center py-2 text-[11px] font-bold text-slate-400 uppercase tracking-tighter">THU
+                    </div>
+                    <div class="text-center py-2 text-[11px] font-bold text-slate-400 uppercase tracking-tighter">FRI
+                    </div>
+                    <div class="text-center py-2 text-[11px] font-bold text-blue-500 uppercase tracking-tighter">SAT
+                    </div>
+                </div>
+
+                <!-- 날짜 그리드 (JS로 렌더링) -->
+                <div id="calendar"
+                    class="calendar-grid bg-slate-200 gap-[1px] border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex-1 min-h-[600px]">
+                    <!-- JS에서 셀을 생성합니다 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 오버 패널 (업무 상세) -->
+        <div id="taskDetail"
+            class="absolute inset-y-0 right-0 w-full sm:w-[480px] bg-white shadow-2xl border-l border-slate-200 transform translate-x-full transition-transform duration-300 ease-in-out z-50 flex flex-col">
+            <div
+                class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/80 backdrop-blur-md sticky top-0">
+                <div>
+                    <span id="detailDept"
+                        class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-100 text-indigo-700 uppercase tracking-wider">교무부</span>
+                    <h3 id="detailTitle" class="text-xl font-bold text-slate-800 mt-1">업무 제목</h3>
+                </div>
+                <button onclick="closeTask()"
+                    class="text-slate-400 hover:text-slate-600 p-2 bg-white rounded-full shadow-sm border border-slate-100 transition-all"><i
+                        class="fas fa-times"></i></button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-6 space-y-8">
+                <!-- 업무배송 (파일 및 서식) -->
+                <section>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2 text-slate-800">
+                            <i class="fas fa-paperclip text-indigo-500"></i>
+                            <h4 class="font-bold">업무배송 패키지</h4>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-medium">경상북도교육청 제공</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div
+                            class="p-4 border border-slate-100 rounded-2xl hover:border-indigo-200 transition-all cursor-pointer flex items-center justify-between group bg-slate-50/30 hover:bg-indigo-50/10">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-11 h-11 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center shadow-sm">
+                                    <i class="far fa-file-word text-xl"></i></div>
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-700">2026학년도_운영계획서_서식.hwp</p>
+                                    <p class="text-[11px] text-slate-400">324KB • 한글문서</p>
+                                </div>
+                            </div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-indigo-600 transition-colors shadow-sm">
+                                <i class="fas fa-download"></i>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 border border-slate-100 rounded-2xl hover:border-indigo-200 transition-all cursor-pointer flex items-center justify-between group bg-slate-50/30 hover:bg-indigo-50/10">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-11 h-11 bg-red-50 text-red-500 rounded-xl flex items-center justify-center shadow-sm">
+                                    <i class="far fa-file-pdf text-xl"></i></div>
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-700">관련_처리_지침_및_사례집.pdf</p>
+                                    <p class="text-[11px] text-slate-400">1.2MB • PDF</p>
+                                </div>
+                            </div>
+                            <div
+                                class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-slate-300 group-hover:text-indigo-600 transition-colors shadow-sm">
+                                <i class="fas fa-download"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 인생도서관 (멘토 매칭) -->
+                <section
+                    class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-3xl border border-indigo-100 shadow-sm relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <i class="fas fa-lightbulb text-6xl text-indigo-600"></i>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2 text-indigo-800">
+                        <i class="fas fa-robot"></i>
+                        <h4 class="font-bold">인생도서관 AI 멘토 매칭</h4>
+                    </div>
+                    <p class="text-xs text-indigo-800/70 mb-5 leading-relaxed font-medium">
+                        업무 처리 중 막막한 부분이 있다면, <br>전문 멘토에게 바로 질문해보세요.
+                    </p>
+
+                    <button onclick="askAI()" id="aiBtn"
+                        class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold hover:bg-indigo-700 shadow-xl shadow-indigo-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fas fa-magic"></i> AI 멘토 추천 받기
+                    </button>
+
+                    <!-- 결과 리스트 -->
+                    <div id="aiResult" class="mt-6 hidden animate-fade-in space-y-3">
+                        <div class="p-3 bg-white/80 border border-white rounded-2xl flex items-center gap-3 shadow-sm">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Expert1"
+                                class="w-10 h-10 rounded-full bg-indigo-100">
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-slate-800 uppercase tracking-tighter">최고 추천 멘토</p>
+                                <p class="text-sm font-bold text-slate-700">박영희 <span
+                                        class="font-normal text-xs text-slate-500">(경산초)</span></p>
+                            </div>
+                            <button
+                                class="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-600 hover:text-white transition-colors">상담
+                                신청</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 하단 기록 가이드 -->
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-center">
+                    <p class="text-[11px] text-slate-400 font-medium">상담 완료 후 인생도서관 일지를 작성하시면 <br>데이터 기반의 더 정교한 추천이
+                        가능해집니다.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 업무 예시 데이터
+        const tasks = {
+            20: [
+                { dept: '교무', title: '주간학습안내 작성/배부', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+                { dept: '정보', title: '정보보안 점검의 날 운영', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+            ],
+            21: [
+                { dept: '연구', title: '동료장학 수업 나눔 주간', color: 'bg-purple-50 text-purple-700 border-purple-200' }
+            ],
+            22: [
+                { dept: '체육', title: '생존수영 교육 사전 안전점검', color: 'bg-red-50 text-red-700 border-red-200' }
+            ],
+            24: [
+                { dept: '행정', title: '목요 장터 결산 보고서 제출', color: 'bg-amber-50 text-amber-700 border-amber-200' }
+            ],
+            27: [
+                { dept: '교무', title: '방과후학교 강사 만족도 조사', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' }
+            ],
+            29: [
+                { dept: '정보', title: '학교홈페이지 보안 업데이트', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
+            ]
+        };
+
+        // 캘린더 생성 함수
+        function initCalendar() {
+            const calendar = document.getElementById('calendar');
+            if (!calendar) return;
+
+            calendar.innerHTML = ''; // 초기화
+
+            // 4월 예시 (일~토 시작점에 맞춰 더미 셀 생성)
+            // 2026년 4월 1일은 수요일(3)
+            const emptyCells = 3;
+            for (let i = 0; i < emptyCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = "bg-slate-50/50";
+                calendar.appendChild(cell);
+            }
+
+            // 4월 30일까지 생성
+            for (let date = 1; date <= 30; date++) {
+                const dayOfWeek = (date + emptyCells - 1) % 7;
+                const isToday = date === 20; // 가상 오늘
+                const dayTasks = tasks[date] || [];
+
+                const cell = document.createElement('div');
+                cell.className = `bg-white min-h-[140px] p-2 flex flex-col transition-all hover:z-10 ${isToday ? 'ring-2 ring-inset ring-indigo-500' : ''}`;
+
+                // 날짜 표시
+                let colorClass = "text-slate-500";
+                if (dayOfWeek === 0) colorClass = "text-red-500";
+                if (dayOfWeek === 6) colorClass = "text-blue-500";
+
+                let taskHtml = dayTasks.map(t => `
+                    <div onclick="openTask('${t.title}', '${t.dept}')" class="task-card ${t.color} text-[10px] p-2 rounded-lg mb-1.5 font-bold border shadow-sm truncate">
+                        <span class="opacity-50 mr-1">${t.dept}</span> ${t.title}
+                    </div>
+                `).join('');
+
+                cell.innerHTML = `
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <span class="text-sm font-black ${colorClass} ${isToday ? 'bg-indigo-600 text-white w-6 h-6 flex items-center justify-center rounded-lg shadow-md' : ''}">${date}</span>
+                    </div>
+                    <div class="flex-1 space-y-1 overflow-hidden">
+                        ${taskHtml}
+                    </div>
+                `;
+                calendar.appendChild(cell);
+            }
+        }
+
+        function openTask(title, dept) {
+            const panel = document.getElementById('taskDetail');
+            document.getElementById('detailTitle').innerText = title;
+            document.getElementById('detailDept').innerText = dept;
+            panel.classList.remove('translate-x-full');
+            document.getElementById('aiResult').classList.add('hidden');
+
+            const btn = document.getElementById('aiBtn');
+            btn.innerHTML = '<i class="fas fa-magic"></i> AI 멘토 추천 받기';
+            btn.disabled = false;
+        }
+
+        function closeTask() {
+            document.getElementById('taskDetail').classList.add('translate-x-full');
+        }
+
+        function askAI() {
+            const btn = document.getElementById('aiBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 인생도서관 일지 분석 중...';
+
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> 분석 완료';
+                document.getElementById('aiResult').classList.remove('hidden');
+            }, 1200);
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = function () {
+            initCalendar();
+        };
+    </script>
+</body>
+
+</html>
