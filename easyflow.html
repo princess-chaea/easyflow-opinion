@@ -505,16 +505,56 @@
             ]
         };
 
-        // 캘린더 생성 함수 (생략 없음)
+        // 캘린더 생성 함수
         function initCalendar() {
             const calendar = document.getElementById('calendar');
             if (!calendar) return;
-            // ... (기존 로직 동일하게 유지)
+
+            calendar.innerHTML = ''; // 초기화
+
+            // 4월 예시 (일~토 시작점에 맞춰 더미 셀 생성)
+            // 2026년 4월 1일은 수요일(3)
+            const emptyCells = 3;
+            for (let i = 0; i < emptyCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = "bg-slate-50/50";
+                calendar.appendChild(cell);
+            }
+
+            // 4월 30일까지 생성
+            for (let date = 1; date <= 30; date++) {
+                const dayOfWeek = (date + emptyCells - 1) % 7;
+                const isToday = date === 20; // 가상 오늘
+                const dayTasks = tasks[date] || [];
+
+                const cell = document.createElement('div');
+                cell.className = `bg-white min-h-[140px] p-2 flex flex-col transition-all hover:z-10 ${isToday ? 'ring-2 ring-inset ring-indigo-500' : ''}`;
+
+                // 날짜 표시
+                let colorClass = "text-slate-500";
+                if (dayOfWeek === 0) colorClass = "text-red-500";
+                if (dayOfWeek === 6) colorClass = "text-blue-500";
+
+                let taskHtml = dayTasks.map(t => `
+                    <div onclick="openTask('${t.title}', '${t.dept}')" class="task-card ${t.color} text-[10px] p-2 rounded-lg mb-1.5 font-bold border shadow-sm truncate">
+                        <span class="opacity-50 mr-1">${t.dept}</span> ${t.title}
+                    </div>
+                `).join('');
+
+                cell.innerHTML = `
+                    <div class="flex justify-between items-center mb-2 px-1">
+                        <span class="text-sm font-black ${colorClass} ${isToday ? 'bg-indigo-600 text-white w-6 h-6 flex items-center justify-center rounded-lg shadow-md' : ''}">${date}</span>
+                    </div>
+                    <div class="flex-1 space-y-1 overflow-hidden">
+                        ${taskHtml}
+                    </div>
+                `;
+                calendar.appendChild(cell);
+            }
         }
 
         // 섹션 전환 함수
         function showSection(sectionId) {
-            // 모든 섹션 숨기기
             const sections = ['diary', 'resources', 'counseling', 'stats'];
             sections.forEach(s => {
                 const el = document.getElementById(`${s}-section`);
@@ -527,22 +567,17 @@
                 }
             });
 
-            // 선택한 섹션 보이기
             const target = document.getElementById(`${sectionId}-section`);
             if (target) {
                 target.classList.remove('hidden');
-                if (sectionId === 'diary') target.classList.add('flex');
-                else target.classList.add('flex'); // 공통적으로 flex 사용 가능하도록 설정
             }
 
-            // 내비게이션 활성화 스타일
             const activeNav = document.getElementById(`nav-${sectionId}`);
             if (activeNav) {
                 activeNav.classList.add('bg-indigo-50', 'text-indigo-700', 'font-semibold');
                 activeNav.classList.remove('text-slate-600');
             }
 
-            // 섹션 변경 시 우측 패널 닫기
             closeTask();
         }
 
